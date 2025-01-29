@@ -22,12 +22,20 @@ async function sendMessage() {
 
     // Send request to OpenAI API
     const response = await queryGPT4o(message, imageBase64);
-    appendMessage("AI: " + response);
+    appendMessage(response, 'ai');
 }
 
-function appendMessage(text) {
+function appendMessage(text, sender = 'user') {
     const msgDiv = document.createElement("div");
-    msgDiv.textContent = text;
+    msgDiv.classList.add(sender);
+    
+    if (sender === 'ai') {
+        // Render the AI response as HTML (from markdown conversion)
+        msgDiv.innerHTML = text; // Using innerHTML for HTML content
+    } else {
+        msgDiv.textContent = text; // Plain text for user message
+    }
+    
     chatBox.appendChild(msgDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -45,16 +53,20 @@ async function queryGPT4o(userMessage, imageBase64) {
     const requestBody = {
         model: "gpt-4o-mini-2024-07-18",
         messages: [
+            {
+                role: "system",
+                content: "You are an expert web dev working to help increase our engineering velocity."
+            },
             { role: "user", content: userMessage },
-            ...(imageBase64 ? [{ 
-                role: "user", 
-                content: [{ 
-                    type: "image_url", 
-                    image_url: { url: `data:image/png;base64,${imageBase64}` } // ✅ Fix: image_url should be an object
-                }] 
-            }] : [])
+            ...(imageBase64 ? [{
+                role: "user",
+                content: [{
+                    type: "image_url",
+                    image_url: { url: `data:image/png;base64,${imageBase64}` }
+                }]
+            }] : []),
         ],
-        temperature: 0.7
+        temperature: 0.7,
     };
 
     console.log("Request Body:", JSON.stringify(requestBody, null, 2)); // Debugging
@@ -74,7 +86,17 @@ async function queryGPT4o(userMessage, imageBase64) {
             throw new Error(`API Error: ${data.error?.message || "Unknown error"}`);
         }
 
-        return data.choices?.[0]?.message?.content || "Error: No response from AI.";
+        const markdownResponse = data.choices?.[0]?.message?.content || "Error: No response from AI.";
+
+        // Initialize the Showdown Converter
+        const converter = new showdown.Converter();
+        
+        // Convert Markdown response to HTML
+        const htmlResponse = converter.makeHtml(markdownResponse);
+
+        // Return the HTML response
+        return htmlResponse;
+        
     } catch (error) {
         console.error("Request Failed:", error);
         return `Error: ${error.message}`;
