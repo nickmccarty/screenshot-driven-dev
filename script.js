@@ -42,8 +42,25 @@ async function sendMessage() {
 
     userInput.value = "";
 
+    // Change button to dots and start animation
+    const sendButton = document.querySelector(".button-container button");
+    sendButton.innerHTML = "&#x2022;"; // Change to a single dot
+    let dotCount = 1; // Start with one dot
+    const dotAnimation = setInterval(() => {
+        sendButton.innerHTML += "&#x2022;"; // Add another dot
+        dotCount++;
+        if (dotCount > 3) {
+            sendButton.innerHTML = "&#x2022;"; // Reset to one dot for animation
+            dotCount = 1;
+        }
+    }, 500); // Change every 500ms
+
     // Send request to OpenAI API
     const response = await queryGPT4o(message, imageBase64);
+
+    // Clear the interval and reset the button text
+    clearInterval(dotAnimation);
+    sendButton.innerHTML = "Send"; // Reset to original text
     appendMessage(response, 'ai');
 
     // Save messages to localStorage
@@ -168,3 +185,4 @@ function updateIcon() {
         `;
     }
 }
+

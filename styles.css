@@ -83,3 +83,21 @@ body {
     display: inline-block; /* Make sure the icon is inline with the button */
     margin-left: 8px; /* Add some space between the input and the icon */
 }
+
+.button-container button {
+    position: relative; /* Required for absolute positioning of dots */
+}
+
+.button-container button span {
+    position: absolute;
+    animation: dotAnimation 1s infinite;
+}
+
+@keyframes dotAnimation {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
