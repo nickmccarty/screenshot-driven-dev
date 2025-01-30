@@ -1,4 +1,5 @@
-const apiKey = "sk-...";
+const defaultApiKey = ""; // Use this as the default value for the apiKey
+let apiKey = defaultApiKey; // Make apiKey a variable to allow reassignment
 const chatBox = document.getElementById("chat-box");
 const imageInput = document.getElementById("imageInput");
 const userInput = document.getElementById("userInput");
@@ -8,6 +9,19 @@ const chatForm = document.getElementById("chat-form");
 document.addEventListener("DOMContentLoaded", () => {
     const savedMessages = JSON.parse(localStorage.getItem("chatMessages")) || [];
     savedMessages.forEach(msg => appendMessage(msg.text, msg.sender));
+
+    // Check if apiKey is empty and prompt for it
+    if (apiKey === "") {
+        apiKey = prompt("Please enter your API Key:");
+
+        // Ensure the user entered a value
+        if (apiKey) {
+            alert("API Key entered successfully.");
+        } else {
+            alert("No API Key entered. You cannot proceed without an API Key.");
+            // Optionally, you can disable the chat form or take other actions here.
+        }
+    }
 });
 
 async function sendMessage() {
