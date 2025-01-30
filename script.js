@@ -37,6 +37,7 @@ async function sendMessage() {
     if (file) {
         imageBase64 = await convertImageToBase64(file);
         imageInput.value = "";  // Clear file input
+        appendImageThumbnail(imageBase64); // Append the image thumbnail
     }
 
     userInput.value = "";
@@ -47,6 +48,17 @@ async function sendMessage() {
 
     // Save messages to localStorage
     saveMessages();
+}
+
+function appendImageThumbnail(imageBase64) {
+    const imgDiv = document.createElement("div");
+    imgDiv.classList.add('image-thumbnail');
+    imgDiv.innerHTML = `<img src="data:image/png;base64,${imageBase64}" alt="Uploaded Image" style="max-width: 250px; border-radius: 10px;"/>`;
+
+    chatBox.appendChild(imgDiv);
+    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+
+    saveMessages(); // Save messages after appending
 }
 
 function appendMessage(text, sender = 'user') {
