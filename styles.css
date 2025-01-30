@@ -72,3 +72,14 @@ body {
     align-items: center;
     height: 100vh;
 }
+
+.image-thumbnail {
+    margin: 5px 0; /* Add some margin for spacing */
+    display: flex;
+    justify-content: center; /* Center the image */
+}
+
+.icon-upload {
+    display: inline-block; /* Make sure the icon is inline with the button */
+    margin-left: 8px; /* Add some space between the input and the icon */
+}
