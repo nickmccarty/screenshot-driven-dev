@@ -2,6 +2,13 @@ const apiKey = "sk-...";
 const chatBox = document.getElementById("chat-box");
 const imageInput = document.getElementById("imageInput");
 const userInput = document.getElementById("userInput");
+const chatForm = document.getElementById("chat-form");
+
+// Load previous messages from localStorage
+document.addEventListener("DOMContentLoaded", () => {
+    const savedMessages = JSON.parse(localStorage.getItem("chatMessages")) || [];
+    savedMessages.forEach(msg => appendMessage(msg.text, msg.sender));
+});
 
 async function sendMessage() {
     const message = userInput.value.trim();
@@ -23,21 +30,34 @@ async function sendMessage() {
     // Send request to OpenAI API
     const response = await queryGPT4o(message, imageBase64);
     appendMessage(response, 'ai');
+
+    // Save messages to localStorage
+    saveMessages();
 }
 
 function appendMessage(text, sender = 'user') {
     const msgDiv = document.createElement("div");
     msgDiv.classList.add(sender);
-    
+
     if (sender === 'ai') {
-        // Render the AI response as HTML (from markdown conversion)
+        // Render the AI response as HTML
         msgDiv.innerHTML = text; // Using innerHTML for HTML content
     } else {
         msgDiv.textContent = text; // Plain text for user message
     }
-    
+
     chatBox.appendChild(msgDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
+    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+
+    saveMessages(); // Save messages after appending
+}
+
+function saveMessages() {
+    const messages = Array.from(chatBox.children).map(msg => ({
+        text: msg.innerHTML || msg.textContent,
+        sender: msg.className
+    }));
+    localStorage.setItem("chatMessages", JSON.stringify(messages));
 }
 
 async function convertImageToBase64(file) {
@@ -90,13 +110,13 @@ async function queryGPT4o(userMessage, imageBase64) {
 
         // Initialize the Showdown Converter
         const converter = new showdown.Converter();
-        
+
         // Convert Markdown response to HTML
         const htmlResponse = converter.makeHtml(markdownResponse);
 
         // Return the HTML response
         return htmlResponse;
-        
+
     } catch (error) {
         console.error("Request Failed:", error);
         return `Error: ${error.message}`;
