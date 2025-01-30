@@ -93,6 +93,12 @@ body {
     animation: dotAnimation 1s infinite;
 }
 
+.button-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
 @keyframes dotAnimation {
     0%, 100% {
         transform: translateY(0);
@@ -101,3 +107,4 @@ body {
         transform: translateY(-5px);
     }
 }
+

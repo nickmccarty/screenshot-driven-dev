@@ -186,3 +186,8 @@ function updateIcon() {
     }
 }
 
+function clearLocalStorage() {
+    localStorage.removeItem("chatMessages");
+    chatBox.innerHTML = ""; // Clear the chat box
+    alert("Local storage cleared!");
+}
