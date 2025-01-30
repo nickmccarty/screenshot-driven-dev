@@ -5,7 +5,7 @@ body {
 }
 
 .chat-container {
-    width: 400px;
+    width: 300px;
     background: rgba(255, 255, 255, 0.3); /* White with transparency */
     backdrop-filter: blur(15px); /* Frosted glass effect */
     border-radius: 20px;
