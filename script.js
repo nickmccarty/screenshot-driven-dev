@@ -12,13 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Check if apiKey is empty and prompt for it
     if (apiKey === "") {
-        apiKey = prompt("Please enter your API Key:");
+        apiKey = prompt("Please enter your OpenAI API Key:");
 
         // Ensure the user entered a value
         if (apiKey) {
             alert("API Key entered successfully.");
         } else {
-            alert("No API Key entered. You cannot proceed without an API Key.");
+            alert("No API Key entered. You cannot proceed without an OpenAI API Key.");
             // Optionally, you can disable the chat form or take other actions here.
         }
     }
